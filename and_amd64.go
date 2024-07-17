@@ -1,28 +1,43 @@
 package and
 
 func and(dst, a, b []byte) {
-	l := uint64(len(a)) >> 8
-	if l != 0 {
-		andAVX2(&dst[0], &a[0], &b[0], l)
+	if hasAVX2() {
+		l := uint64(len(a)) >> 8
+		if l != 0 {
+			andAVX2(&dst[0], &a[0], &b[0], l)
+		}
+		l <<= 8
+		dst = dst[l:]
+		a = a[l:]
+		b = b[l:]
 	}
-	l <<= 8
-	andGeneric(dst[l:], a[l:], b[l:])
+	andGeneric(dst, a, b)
 }
 
 func or(dst, a, b []byte) {
-	l := uint64(len(a)) >> 8
-	if l != 0 {
-		orAVX2(&dst[0], &a[0], &b[0], l)
+	if hasAVX2() {
+		l := uint64(len(a)) >> 8
+		if l != 0 {
+			orAVX2(&dst[0], &a[0], &b[0], l)
+		}
+		l <<= 8
+		dst = dst[l:]
+		a = a[l:]
+		b = b[l:]
 	}
-	l <<= 8
-	orGeneric(dst[l:], a[l:], b[l:])
+	orGeneric(dst, a, b)
 }
 
 func andNot(dst, a, b []byte) {
-	l := uint64(len(a)) >> 8
-	if l != 0 {
-		andNotAVX2(&dst[0], &a[0], &b[0], l)
+	if hasAVX2() {
+		l := uint64(len(a)) >> 8
+		if l != 0 {
+			andNotAVX2(&dst[0], &a[0], &b[0], l)
+		}
+		l <<= 8
+		dst = dst[l:]
+		a = a[l:]
+		b = b[l:]
 	}
-	l <<= 8
-	andNotGeneric(dst[l:], a[l:], b[l:])
+	andNotGeneric(dst, a, b)
 }
